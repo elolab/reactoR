@@ -1,0 +1,11 @@
+Package: REACTOR
+Type: Package
+Title: Regulon Expression Analysis and Comparison Tool for Omics Research
+Version: 0.1.0
+Author: Markus Lindén, Sebastian Zuniga, Laura L. Elo
+Maintainer: MBC <mbc@utu.fi>
+Description: Perform statistical analysis over regulons discovered by SCENIC in single-cell RNA datasets. The package will deliver a detailed statistical analysis contrasting activity of regulons over experimental conditions.
+Imports: ROTS, dplyr, magrittr
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
