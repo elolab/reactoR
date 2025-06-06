@@ -1,6 +1,6 @@
-performDETesting <-
-function(data, groups, B=100, K=5000, seed=1234, maxZeros = NA){
-  
+differentialActivityAnalysis <-
+function(data, groups, ..., maxZeros = NA){
+  # ... = parameeters to be passed to ROTS
   if(is.na(maxZeros)){
     maxZeros <- ncol(data)
   }
@@ -19,7 +19,7 @@ function(data, groups, B=100, K=5000, seed=1234, maxZeros = NA){
   data_filtered <- subset(data_filtered , rowSums(data_filtered  == 0) <= maxZeros)
   
   #Run ROTS
-  ROTS_object = ROTS(data = data_filtered, groups = groups , B = B , K = K , seed = seed)
+  ROTS_object = ROTS(data = data_filtered, groups = groups , ...)
   
   results_rots <- cbind(ROTS_object$data, data.frame(d=ROTS_object$d, p=ROTS_object$pvalue, fdr=ROTS_object$FDR, fc = ROTS_object$logfc))
   results_rots <- arrange(results_rots, fdr)

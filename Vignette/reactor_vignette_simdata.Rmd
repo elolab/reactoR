@@ -1,0 +1,153 @@
+---
+title: "REACTOR_vignette_simData"
+author: "Markus"
+date: "2025-06-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Simulating data for analysis
+
+In this vignette we will be simulating data that might resemble the data you would use in your REACOTR analysis and give you a step by step guide on how to use the REACTOR package for your analysis!
+
+Lets start by simulating data that resembles the data from SCENICs [1] binazire()-function, which is just a matrix consisting of binary values. The data matrix should also contain a column that is used to identify the single-cell sample the values come from (this should also be found on the SCENIC output by default).
+
+```{r simBinData}
+# Single cell sample identifiers for 2 cases, 2 controls. 10 single cell samples each
+cellID <- c("Covid-1-1","Covid-1-2","Covid-1-3","Covid-1-4","Covid-1-5", "Covid-1-6","Covid-1-7","Covid-1-8","Covid-1-9","Covid-1-10", 
+            "Covid-2-1","Covid-2-2","Covid-2-3","Covid-2-4","Covid-2-5", "Covid-2-6","Covid-2-7","Covid-2-8","Covid-2-9","Covid-2-10", 
+          "Healthy-1-1","Healthy-1-2","Healthy-1-3","Healthy-1-4","Healthy-1-5", "Healthy-1-6","Healthy-1-7","Healthy-1-8","Healthy-1-9","Healthy-1-10", 
+                    "Healthy-2-1","Healthy-2-2","Healthy-2-3","Healthy-2-4","Healthy-2-5", "Healthy-2-6","Healthy-2-7","Healthy-2-8","Healthy-2-9","Healthy-2-10")
+
+# Lets also name a few regulons our single cell experiments might have found and add "CellID" to the beginning of this list to get the final column names for our matrix.
+colNames <- c("CellID","NFIL3", "MAFB", "MYCN", "FOXK2", "PPARG", "STAT2", "JUNB", "JUND", "RELB", "ETV1")
+
+# Now simulating the binary matrix
+set.seed(1234)
+binary_matrix <- matrix(sample(0:1, 40 * 10, replace = TRUE), nrow = 40, ncol = 10)
+# Lets add the cell identifier column we made earlier and set the column names
+binary_matrix <- cbind.data.frame(cellID, binary_matrix)
+colnames(binary_matrix) <- colNames
+# Lets see what our matrix should look like
+head(binary_matrix)
+
+```
+
+Now lets simulate the clustering our e.g. Coralysis or SEURAT analysis might have made for us:
+
+```{r simClustering}
+# Lets use the single cell sample identifiers we made earlier and assign them some cell-type clusters
+cellTypeClusters <- rep(c("CD 14 Monocyte", "CD 16 Monocyte", "CD8m T", "NK"), 10)
+clustering <- cbind.data.frame(cellID, cellTypeClusters)
+# This is what our clustering dataframe should look like
+head(clustering)
+```
+And lets finally simulate the studyDesign table we should also have in order to run REACTOR analysis
+
+
+```{r simStudyDesign}
+# Donors based on the cellIDs we made earlier
+donor <- c(rep("Covid1",10), rep("Covid2",10), rep("Healthy1",10), rep("Healthy2",10))
+# Status of the samples
+status <- c(rep("COVID",20), rep("Healthy",20))
+# Other clinical information that could be available
+sex <- c(rep("M",40))
+admission <- c(rep("ICU",40))
+
+# Combine into study design table
+studyDesign <- cbind.data.frame(cellID, donor, status, sex,  admission)
+# This is what your study design should roughly look like. It should contain the information from which donor the sample came from and their status.
+head(studyDesign)
+
+```
+
+## Running REACTOR analysis with our newly simulated data
+
+Now that we have some data to work with we can start with running the REACTOR analysis. The first step in the REACTOR workflow is to create the activity matrix for the differential activity analysis. This can be done using the REACTOR processData-function.
+
+### Processing the input data
+
+The parameters required for the analysis are as follows:
+
+|Parameter |Explanation |Value to be used in this vignette |
+|:-------- |:-------- |:-------- |
+|minCells |minimum number of cells present in a cell-type cluster within a donor |We will use 0 here as the simulated dataset is rather small |
+|RBM |Regulon Binary Matrix. This is produced by SCENICs binazire-function! (1st column should represent the single cell sample IDs) |The binary_matrix we created earlier |
+|Study Design |Study design dataframe. Should contain information (as columns) from which sample and which condition the single cell sample came from and the 1st column should represent the single cell sample IDs  |The studyDesign dataframe we created earlier |
+|Clustering |Clustering dataframe (1st column should represent the single cell sample IDs) |The clustering dataframe we created earlier |
+|cluster_cName |Column name of the clustering to use from the Clustering dataframe |"cellTypeClusters" |
+|condition_cName |Name of the column of conditions to be contrasted from the StudyDesign dataframe (i.e COVID or Healthy) |"status"
+|sample_cName |Name of the sample column from the StudyDesign dataframe |"donor" |
+
+```{r preprocessing}
+
+# Please ensure that the first column of each of the input data matrices represents the single-cell sample ID so we can join them!
+
+
+sample_cname      = "donor"
+cluster_cname     = "cellTypeClusters"
+condition_cname   = "status"
+
+minCells = 0
+
+# processData returns a list that contains the processed data at index 1 and
+# RegulonActivity dataframe at index 2. The regulonActivity dataframe can be
+# viewed to fine tune the minCells parameter for future runs.
+data_out <- REACTOR::processData(minCells = minCells, RBM = binary_matrix,
+StudyDesign = studyDesign, Clustering = clustering,
+condition_cName = condition_cname, sample_cName = sample_cname,
+cluster_cName = cluster_cname)
+
+# Data in long format (required for the differental activity analysis)
+long_data <- data_out[[1]]
+# Data in wide format, can be used to i.e. fine tune the minCells parameter or create an activity heatmap
+regulonActivity <- data_out[[2]]
+
+head(long_data)
+```
+### Running differential activity analysis
+
+Now that we have done some data pre-processing we can run the differential activity analysis using the differentialActivityAnalysis-function! REACTOR uses ROTS [2] to conduct the analysis.
+
+The input parameters are as follows:
+
+|Parameter |Explanation |Value to be used in this vignette |
+|:-------- |:-------- |:-------- |
+|data |Data frame contating the proportional counts of binary regulon activity. This is the first output produced by the REACTOR::processData-function. |long_data-data frame we created earlier using REACTOR |
+|groups |Vector specifying the experimental groups (i.e. COVID, Healthy) |In this case it is c(1,1,2,2). You can check this by viewing the long_data dataframe and checking the column names and comparing them to the metadata you have |
+|Max Zeros |Maximum number of zero values present in a row of the input data frame. Rows that contain more zero values than this parameter will be filtered before the ROTS analysis. |We will use the default parameter (NA) in this case as our dataset is rather small |
+|... |Parameters passed onto ROTS. See  [ROTS](https://www.bioconductor.org/packages/release/bioc/html/ROTS.html) |We will be setting seed to 1234 |
+
+
+```{r differentialactivity}
+
+groups <- c(rep(1,2), rep(2,2)) 
+
+# Differential activity analysis using reactor
+DAA_out <- REACTOR::differentialActivityAnalysis(long_data, groups, seed=1234, K=100)
+
+# The outputs from the analysis are as follows: at index 1 you have the ROTS object and at index 2 you have simplified results table 
+ROTS_obj <- DAA_out[[1]]
+ROTS_results <- DAA_out[[2]]
+
+head(ROTS_results)
+
+```
+
+Based on this analysis we have one significant regulon celltype combination based on p-value 0.05 cutoff (CD16 Monocyte STAT2). The FDR values are low due to low sample size. With the ROTS object you can easily do some plotting. Lets explore a few options (more can be found on [ROTS](https://www.bioconductor.org/packages/release/bioc/html/ROTS.html) documentation)
+```{r ROTSVOLCANO}
+
+plot(ROTS_obj, type="pvalue")
+plot(ROTS_obj, type="reproducibility")
+plot(ROTS_obj, type="volcano", fdr=0.61, labels = T)
+
+```
+
+## References
+
+[1] B. Van de Sande et al., “A scalable SCENIC workflow for single-cell gene regulatory network analysis,” Nat. Protoc., vol. 15, no. 7, Art. no. 7, Jul. 2020, doi: 10.1038/s41596-020-0336-2.
+
+[2] T. Suomi, F. Seyednasrollah, M. K. Jaakkola, T. Faux, and L. L. Elo, “ROTS: An R package for reproducibility-optimized statistical testing,” PLOS Comput. Biol., vol. 13, no. 5, p. e1005562, May 2017, doi: 10.1371/journal.pcbi.1005562.

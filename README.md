@@ -18,9 +18,7 @@ R -e 'install.packages("devtools"); devtools::install("REACTOR")'
 
 #### USAGE
 
-Please see the vignette for an example analysis. This vignette will also reproduce the figures used in the publication.
-
-#### Citations
+Please see the vignette for an example analysis.
 
 
 
