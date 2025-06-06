@@ -1,4 +1,4 @@
-export("performDETesting", "processData")
+export("differentialActivityAnalysis", "processData")
 import(ROTS)
 import(dplyr)
 importFrom(magrittr, '%>%')
