@@ -6,7 +6,7 @@ function(minCells = 0, RBM, StudyDesign, Clustering, cluster_cName, condition_cN
   #Rename data columns for readability
   RBM <- rename(RBM, CellID = 1)
   Clustering <- rename(Clustering, CellID = 1)
-  StudyDesign <- rename(studyDesign, CellID = 1)
+  StudyDesign <- rename(StudyDesign, CellID = 1)
   Clustering <- rename(Clustering, Cluster = cluster_cName)
   StudyDesign <- rename(StudyDesign, Condition = condition_cName)
   StudyDesign <- rename(StudyDesign, Group = sample_cName)

@@ -1,7 +1,7 @@
 ---
 title: "REACTOR_vignette_simData"
-author: "Markus"
-date: "2025-06-04"
+author: "Markus & Sini"
+date: "2025-06-12"
 output: html_document
 ---
 
@@ -11,9 +11,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Simulating data for analysis
 
-In this vignette we will be simulating data that might resemble the data you would use in your REACOTR analysis and give you a step by step guide on how to use the REACTOR package for your analysis!
+In this vignette we will be simulating data that resembles the data you would use in your REACOTR analysis and give you a step by step guide on how to use the REACTOR package for your analysis!
 
-Lets start by simulating data that resembles the data from SCENICs [1] binazire()-function, which is just a matrix consisting of binary values. The data matrix should also contain a column that is used to identify the single-cell sample the values come from (this should also be found on the SCENIC output by default).
+Let's start by simulating data that resembles the data from SCENIC's [1] binarize()-function, which is just a matrix consisting of binary values. The data matrix should also contain a column that is used to identify the single-cell sample the values come from (this should also be found in the SCENIC output by default).
 
 ```{r simBinData}
 # Single cell sample identifiers for 2 cases, 2 controls. 10 single cell samples each
@@ -36,7 +36,7 @@ head(binary_matrix)
 
 ```
 
-Now lets simulate the clustering our e.g. Coralysis or SEURAT analysis might have made for us:
+Now let's simulate the clustering our e.g. Coralysis or SEURAT analysis might have made for us:
 
 ```{r simClustering}
 # Lets use the single cell sample identifiers we made earlier and assign them some cell-type clusters
@@ -45,7 +45,7 @@ clustering <- cbind.data.frame(cellID, cellTypeClusters)
 # This is what our clustering dataframe should look like
 head(clustering)
 ```
-And lets finally simulate the studyDesign table we should also have in order to run REACTOR analysis
+And let's finally simulate the studyDesign table we should also have in order to run REACTOR analysis:
 
 
 ```{r simStudyDesign}
@@ -66,7 +66,7 @@ head(studyDesign)
 
 ## Running REACTOR analysis with our newly simulated data
 
-Now that we have some data to work with we can start with running the REACTOR analysis. The first step in the REACTOR workflow is to create the activity matrix for the differential activity analysis. This can be done using the REACTOR processData-function.
+Now that we have some data to work with we can start running the REACTOR analysis. The first step in the REACTOR workflow is to create the activity matrix for the differential activity analysis. This can be done using the REACTOR processData-function.
 
 ### Processing the input data
 
@@ -75,8 +75,8 @@ The parameters required for the analysis are as follows:
 |Parameter |Explanation |Value to be used in this vignette |
 |:-------- |:-------- |:-------- |
 |minCells |minimum number of cells present in a cell-type cluster within a donor |We will use 0 here as the simulated dataset is rather small |
-|RBM |Regulon Binary Matrix. This is produced by SCENICs binazire-function! (1st column should represent the single cell sample IDs) |The binary_matrix we created earlier |
-|Study Design |Study design dataframe. Should contain information (as columns) from which sample and which condition the single cell sample came from and the 1st column should represent the single cell sample IDs  |The studyDesign dataframe we created earlier |
+|RBM |Regulon Binary Matrix. This is produced by SCENIC's binarize-function! (1st column should represent the single cell sample IDs) |The binary_matrix we created earlier |
+|Study Design |Study design dataframe. Should contain information (as columns) from which sample and which condition the single cell sample came and the 1st column should represent the single cell sample IDs  |The studyDesign dataframe we created earlier |
 |Clustering |Clustering dataframe (1st column should represent the single cell sample IDs) |The clustering dataframe we created earlier |
 |cluster_cName |Column name of the clustering to use from the Clustering dataframe |"cellTypeClusters" |
 |condition_cName |Name of the column of conditions to be contrasted from the StudyDesign dataframe (i.e COVID or Healthy) |"status"
@@ -116,8 +116,8 @@ The input parameters are as follows:
 
 |Parameter |Explanation |Value to be used in this vignette |
 |:-------- |:-------- |:-------- |
-|data |Data frame contating the proportional counts of binary regulon activity. This is the first output produced by the REACTOR::processData-function. |long_data-data frame we created earlier using REACTOR |
-|groups |Vector specifying the experimental groups (i.e. COVID, Healthy) |In this case it is c(1,1,2,2). You can check this by viewing the long_data dataframe and checking the column names and comparing them to the metadata you have |
+|data |Dataframe containing the proportional counts of binary regulon activity. This is the first output produced by the REACTOR::processData-function. |long_data dataframe we created earlier using REACTOR |
+|groups |Vector specifying the experimental groups (i.e. COVID, Healthy) as integers |In this case it is c(1,1,2,2). You can check this by viewing the long_data dataframe and checking the column names and comparing them to the metadata you have |
 |Max Zeros |Maximum number of zero values present in a row of the input data frame. Rows that contain more zero values than this parameter will be filtered before the ROTS analysis. |We will use the default parameter (NA) in this case as our dataset is rather small |
 |... |Parameters passed onto ROTS. See  [ROTS](https://www.bioconductor.org/packages/release/bioc/html/ROTS.html) |We will be setting seed to 1234 |
 
@@ -137,7 +137,7 @@ head(ROTS_results)
 
 ```
 
-Based on this analysis we have one significant regulon celltype combination based on p-value 0.05 cutoff (CD16 Monocyte STAT2). The FDR values are low due to low sample size. With the ROTS object you can easily do some plotting. Lets explore a few options (more can be found on [ROTS](https://www.bioconductor.org/packages/release/bioc/html/ROTS.html) documentation)
+Based on this analysis we have one significant regulon-celltype combination based on p-value 0.05 cutoff (CD16 Monocyte STAT2). The FDR values are not significant due to the nature in which we simulated the data and the dataset being rather small. With the ROTS object you can easily do some plotting. Let's explore a few options (more can be found in [ROTS](https://www.bioconductor.org/packages/release/bioc/html/ROTS.html) documentation)
 ```{r ROTSVOLCANO}
 
 plot(ROTS_obj, type="pvalue")
