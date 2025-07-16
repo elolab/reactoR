@@ -1,5 +1,5 @@
 differentialActivityAnalysis <-
-function(data, groups, ..., maxZeros = NA){
+function(data, groups, maxZeros = NA, ...){
   # ... = parameeters to be passed to ROTS
   if(is.na(maxZeros)){
     maxZeros <- ncol(data)

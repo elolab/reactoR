@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Simulating data for analysis
 
-In this vignette we will be simulating data that resembles the data you would use in your REACOTR analysis and give you a step by step guide on how to use the REACTOR package for your analysis!
+In this vignette we will be simulating data that resembles the data you would use in your REACTOR analysis and give you a step by step guide on how to use the REACTOR package for your analysis!
 
 Let's start by simulating data that resembles the data from SCENIC's [1] binarize()-function, which is just a matrix consisting of binary values. The data matrix should also contain a column that is used to identify the single-cell sample the values come from (this should also be found in the SCENIC output by default).
 
