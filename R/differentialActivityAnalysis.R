@@ -1,13 +1,13 @@
 differentialActivityAnalysis <-
-function(data, groups, maxZeros = NA, ...){
+function(data, groups, ..., maxZeros = NA){
   # ... = parameeters to be passed to ROTS
   if(is.na(maxZeros)){
     maxZeros <- ncol(data)
   }
 
   #Gather rows with enough non NA values and filter the rest
-  cases_2_remain <- rowSums(!is.na(data[groups==unique(groups)[1], ])) >= 2
-  controls_2_remain <- rowSums(!is.na(data[groups==unique(groups)[2],])) >= 2
+  cases_2_remain <- rowSums(!is.na(data[, groups==unique(groups)[1]])) >= 2
+  controls_2_remain <- rowSums(!is.na(data[,groups==unique(groups)[2]])) >= 2
   data_filtered <- data
   data_filtered <- data_filtered[cases_2_remain & controls_2_remain,]
   

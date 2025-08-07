@@ -16,10 +16,10 @@ function(minCells = 0, RBM, StudyDesign, Clustering, cluster_cName, condition_cN
   RegulonActivity <- RBM %>% 
     left_join(Clustering) %>% 
     left_join(StudyDesign) %>% 
-    group_by(Cluster, Group, Condition) %>%
+    group_by(.data$Cluster, .data$Group, .data$Condition) %>%
     summarise(Cells = n(), across(where(is.numeric), sum)) %>%
-    filter(Cells >= minCells) %>% 
-    mutate(across(where(is.numeric) & !c(Cells), function(x) x*100/Cells))
+    filter(.data$Cells >= minCells) %>% 
+    mutate(across(where(is.numeric) & !c(.data$Cells), function(x) x*100/.data$Cells))
   
   #Remove rows with no donor information
   RegulonActivity <- RegulonActivity[!is.na(RegulonActivity$Group),]
