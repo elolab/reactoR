@@ -2,7 +2,7 @@
 This is an R package for statistical analysis of regulons. This package expects the outputs of the SCENIC framework and clustering information as its inputs. The package uses ROTS R package for conducting the statistical testing and this in turn makes it possible to conduct the analysis on data of various experimental conditions, including case-control- and multigroup analysis. REACTOR outputs the resulting ROTS object as well as a dataframe of the results for users with no experience using ROTS.
 
 
-#### Installation
+## :package: Installation
 ``` R 
 install.packages("devtools")
 devtools::install_github("elolab/REACTOR")
@@ -16,9 +16,9 @@ R -e 'install.packages("devtools"); devtools::install("REACTOR")'
 ```
 
 
-#### Example Analysis
+## :hammer_and_wrench: Usage
 
-Please see the vignette for a more detailed analysis and explanation of the parameters used!
+Please see the vignette for a more detailed example analysis and explanation of the parameters used!
 
 Load the library
 ``` R 
@@ -81,6 +81,6 @@ DAA_out <- REACTOR::differentialActivityAnalysis(data_out[[1]], groups)
 ```
 
 
-#### References
-[1] B. Van de Sande et al., “A scalable SCENIC workflow for single-cell gene regulatory network analysis,” Nat. Protoc., vol. 15, no. 7, Art. no. 7, Jul. 2020, doi: 10.1038/s41596-020-0336-2.
+## :books: References
+[1] B. Van de Sande et al., “A scalable SCENIC workflow for single-cell gene regulatory network analysis,” Nat. Protoc., vol. 15, no. 7, Art. no. 7, Jul. 2020, doi: 10.1038/s41596-020-0336-2.<br>
 [2] T. Suomi, F. Seyednasrollah, M. K. Jaakkola, T. Faux, and L. L. Elo, “ROTS: An R package for reproducibility-optimized statistical testing,” PLOS Comput. Biol., vol. 13, no. 5, p. e1005562, May 2017, doi: 10.1371/journal.pcbi.1005562.
