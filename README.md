@@ -1,11 +1,14 @@
 # REACTOR
 This is an R package for statistical analysis of regulons. This package expects the outputs of the SCENIC framework and clustering information as its inputs. The package uses ROTS R package for conducting the statistical testing and this in turn makes it possible to conduct the analysis on data of various experimental conditions, including case-control- and multigroup analysis. REACTOR outputs the resulting ROTS object as well as a dataframe of the results for users with no experience using ROTS.
 
-<p align="center">
+<div align="center">
 
-<img src="man/figures/reactor_workflow.png" width="90%" alt="Reactor workflow" />
+<picture>
+	<source srcset="man/figures/reactor_workflow_darkmode.png" media="(prefers-color-scheme: dark)"/>
+	<img src="man/figures/reactor_workflow.png">
+</picture>
 
-</p>
+</div>
 
 
 
