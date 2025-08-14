@@ -1,6 +1,13 @@
 # REACTOR
 This is an R package for statistical analysis of regulons. This package expects the outputs of the SCENIC framework and clustering information as its inputs. The package uses ROTS R package for conducting the statistical testing and this in turn makes it possible to conduct the analysis on data of various experimental conditions, including case-control- and multigroup analysis. REACTOR outputs the resulting ROTS object as well as a dataframe of the results for users with no experience using ROTS.
 
+<p align="center">
+
+<img src="man/figures/reactor_workflow.png" width="90%" alt="Reactor workflow" />
+
+</p>
+
+
 
 ## :package: Installation
 ``` R 
@@ -39,7 +46,7 @@ Now that we have some data to work with we can start running the REACTOR analysi
 |Parameter |Explanation |
 |:-------- |:-------- |
 |minCells |minimum number of cells present in a cell-type cluster within a donor |
-|RBM |Regulon Binary Matrix. This is produced by SCENIC's binarize-function! (1st column should represent the single cell sample IDs) |
+|RBM |Regulon Binary Matrix. This is produced by SCENIC's binarize-function (1st column should represent the single cell sample IDs) |
 |Study Design |Study design dataframe. Should contain information (as columns) from which sample and which condition the single cell sample came and the 1st column should represent the single cell sample IDs  |
 |Clustering |Clustering dataframe (1st column should represent the single cell sample IDs) |
 |cluster_cName |Column name of the clustering to use from the Clustering dataframe |
@@ -62,14 +69,14 @@ condition_cName = condition_cname, sample_cName = sample_cname,
 cluster_cName = cluster_cname)
 ```
 ##### Conducting the differential expression analysis
-Now that we have done some data pre-processing we can run the differential activity analysis using the differentialActivityAnalysis-function! REACTOR uses ROTS [2] to conduct the analysis.
+Now that we have done some data pre-processing we can run the differential activity analysis using the differentialActivityAnalysis-function. REACTOR uses ROTS [2] to conduct the analysis.
 Again lets look at the parameters of the function first:
 
 |Parameter |Explanation |
 |:-------- |:-------- |
 |data |Dataframe containing the proportional counts of binary regulon activity. This is the first output produced by the REACTOR::processData-function. |
 |groups |Vector specifying the experimental groups (i.e. COVID, Healthy) as integers |
-|Max Zeros |Maximum number of zero values present in a row of the input data frame. Rows that contain more zero values than this parameter will be filtered before the ROTS analysis. |
+|maxZeros |Maximum number of zero values present in a row of the input data frame. Rows that contain more zero values than this parameter will be filtered before the ROTS analysis. |
 |... |Parameters passed onto ROTS. See  [ROTS](https://www.bioconductor.org/packages/release/bioc/html/ROTS.html) |
 
 ``` R 
