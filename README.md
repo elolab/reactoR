@@ -42,6 +42,32 @@ rbm <- read_csv(rbm_fname) # Reading in the binarized activtiy matrix
 studyDesign <- read_csv(study_fname) # Reading in the clinical information
 clustering <- read_csv(cluster_fname) # Reading in the clustering table
 ```
+Below are examples of the input dataframe structures.
+
+Clustering table:
+|cellID |cellTypeCluster |
+|:-------- |:-------- |
+|Cell1 |Cluster1 |
+|Cell2 |Cluster2 |
+|Cell3 |Cluster1 |
+|Cell4 |Cluster2 |
+
+Binarized activity matrix:
+|cellID |Regulon1 |Regulon2 |Regulon3 |
+|:-------- |:-------- |:-------- |:-------- |
+|Cell1 |1 |0 |1 |
+|Cell2 |0 |1 |0 |
+|Cell3 |1 |0 |1 |
+|Cell4 |0 |1 |0 |
+
+Study design dataframe:
+|cellID |donor |status |
+|:-------- |:-------- |:-------- |
+|Cell1 |1 |Case |1 |
+|Cell2 |1 |Case |0 |
+|Cell3 |2 |Control |
+|Cell4 |2 |Control |
+
 ##### Processing the data into a format that can be analyzed
 
 Now that we have some data to work with we can start running the REACTOR analysis. The first step in the REACTOR workflow is to create the activity matrix for the differential activity analysis. This can be done using the REACTOR processData-function. Lets look at the parameters:
@@ -89,7 +115,8 @@ groups <- c(1,1,1,2,2,2)
 #The function returns a list whose outputs are as follows: at index 1 you have the ROTS object and at index 2 you have simplified results table 
 DAA_out <- REACTOR::differentialActivityAnalysis(data_out[[1]], groups)
 ```
-
+## :bookmark_tabs: Vignette
+[Example analysis with simulated data](https://github.com/elolab/reactoR/blob/main/Vignette/reactor_vignette_simdata.html)
 
 ## :books: References
 [1] B. Van de Sande et al., “A scalable SCENIC workflow for single-cell gene regulatory network analysis,” Nat. Protoc., vol. 15, no. 7, Art. no. 7, Jul. 2020, doi: 10.1038/s41596-020-0336-2.<br>
