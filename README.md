@@ -1,5 +1,5 @@
 # REACTOR
-This is an R package for statistical analysis of regulons (transcription factor with its predicted targets). This package expects the outputs of the SCENIC framework and clustering information as its inputs. The package uses ROTS R package for conducting the statistical testing and this in turn makes it possible to conduct the analysis on data of various experimental conditions, including case-control- and multigroup analysis. REACTOR outputs the resulting ROTS object as well as a table of the results for users with no experience using ROTS.
+This is an R package for statistical analysis of regulons (transcription factor with its predicted targets) described in paper ["REACTOR: REgulon Activity analysis and Comparison Tool for single-cell transcriptOmics Research"](https://doi.org/10.1093/bioinformatics/btag203). This package expects the outputs of the SCENIC framework and clustering information as its inputs. The package uses ROTS R package for conducting the statistical testing and this in turn makes it possible to conduct the analysis on data of various experimental conditions, including case-control- and multigroup analysis. REACTOR outputs the resulting ROTS object as well as a table of the results for users with no experience using ROTS.
 
 <div align="center">
 
